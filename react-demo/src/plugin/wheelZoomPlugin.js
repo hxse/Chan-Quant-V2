@@ -99,10 +99,10 @@ export default function wheelZoomPlugin(opts) {
               max: nxMax,
             });
 
-            u.setScale("y", {
-              min: nyMin,
-              max: nyMax,
-            });
+            // u.setScale("y", {
+            //   min: nyMin,
+            //   max: nyMax,
+            // });
           });
         });
       },

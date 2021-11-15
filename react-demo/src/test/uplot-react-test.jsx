@@ -1,6 +1,5 @@
 import React from "react";
 import { useState, useEffect, useMemo } from "react";
-import { unstable_batchedUpdates } from "react-dom";
 
 import uPlot from "uplot";
 import UplotReact from "uplot-react";
