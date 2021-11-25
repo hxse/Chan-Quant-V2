@@ -1,6 +1,6 @@
 import uPlot from "uplot";
 
-function gridPlugin({ dataObj, config }, show = [2, 3, 4], mode = "horse") {
+function gridPlugin({ dataObj, config, horseData }, show = [2, 3, 4], mode = "horse") {
   let bullishColor = "rgba(255,0,0,0.5)";
   let bearishColor = "rgba(0, 255, 255,0.5)";
 
@@ -32,11 +32,9 @@ function gridPlugin({ dataObj, config }, show = [2, 3, 4], mode = "horse") {
       draw: (u) => {
         // if (show.length > 0) return;
         const { ctx, data } = u;
-        let data_s;
-        data_s = dataObj.horseData.map((i) => i.slice(config.smaExtra));
 
-        for (let index in data_s) {
-          let series = data_s[index];
+        for (let index in horseData) {
+          let series = horseData[index];
           let xMin = u.scales.x.min;
           let xMax = u.scales.x.max;
           let xMinPos = Math.floor(u.valToPos(xMin, "x", true));
@@ -47,7 +45,7 @@ function gridPlugin({ dataObj, config }, show = [2, 3, 4], mode = "horse") {
           let yMinPos = Math.floor(u.valToPos(yMin, "y", true));
           let yMaxPos = Math.floor(u.valToPos(yMax, "y", true));
 
-          let yHeight = Math.floor((yMaxPos - yMinPos) / data_s.length);
+          let yHeight = Math.floor((yMaxPos - yMinPos) / horseData.length);
           let yStart = yMinPos + yHeight * index;
 
           for (let index_s in series) {

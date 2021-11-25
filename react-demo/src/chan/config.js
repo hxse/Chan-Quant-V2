@@ -1,13 +1,14 @@
 const config = {
   name: "SHFE.RB",
   frequency: "300s",
-  count: 1000,
+  count: 100,
   refresh: false,
-  updateCount: 10,
+  updateCount: 3,
   updateRefresh: false,
   updateMode: "timeout", //更新模式
-  lazyTime: 1000, //更新延时,
+  lazyTime: 1500, //更新延时,
   smaLevel: [2, 4, 8, 16, 32, 64],
+  smaLevel: [2, 4, 8, 16],
   smaColor: [
     [255, 0, 0],
     [255, 255, 0],
@@ -17,8 +18,11 @@ const config = {
     [255, 0, 255],
   ],
   fake: true,
-  fakeNum: 300,
-  fakeStep: 50,
+  fakeNum: 60,
+  fakeStep: 2,
 };
 config.smaExtra = config.smaLevel[config.smaLevel.length - 1] - 1;
+if (config.count <= config.fakeNum) {
+  debugger;
+}
 export default config;

@@ -87,7 +87,7 @@ export function funcDataObj(tohlcvData, config) {
   };
 }
 
-function funcCutUpdateData(preTohlcvData, curTohlcvData) {
+export function funcCutUpdateData(preTohlcvData, curTohlcvData) {
   const lastTime = preTohlcvData[0][preTohlcvData[0].length - 1];
   const idx = curTohlcvData[0].indexOf(lastTime);
   return idx == -1 ? undefined : curTohlcvData.map((i) => i.slice(idx + 1));
@@ -128,6 +128,14 @@ export function funcCombineUpdateDataObj(preTohlcvData, curTohlcvData, preDataOb
   console.log(combineDataObj["tohlcv"][0].length);
   return combineDataObj;
 }
-export function funcDataUplot(dataObj, config) {
-  return [dataObj.tohlcv[0].slice(config.smaExtra), ...dataObj.smaData.map((i) => i.slice(config.smaExtra))];
+export function funcDataUplot(dataObj, config, mode) {
+  switch (mode) {
+    case "sma":
+      return [
+        dataObj.tohlcv[0].slice(config.smaExtra),
+        ...config.smaLevel.map((i) => dataObj.sma[`sma${i}`].slice(config.smaExtra)),
+      ];
+    case "horse":
+      return [...config.smaLevel.map((i) => dataObj.horse[`horse${i}`].slice(config.smaExtra))].slice(1);
+  }
 }

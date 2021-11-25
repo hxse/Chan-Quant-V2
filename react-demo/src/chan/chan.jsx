@@ -15,9 +15,18 @@ import candleOpt from "./candleOpt";
 import useLoop from "../hook/loop-hook";
 import { useFetchData, useApi } from "../hook/get-data";
 //引用函数
-import { funcDataObj, funcCombineUpdateDataObj } from "../func/generateIndicator";
+import { funcDataObj, funcCombineUpdateDataObj, funcCutUpdateData } from "../func/funcIndicator";
+import { genDataObj } from "../func/genIndicator";
 
 let loopCount = 0;
+let gdo, res;
+const candleState = { isInit: undefined, isUpdate: undefined, isWaiting: undefined };
+const horseState = { isInit: undefined, isUpdate: undefined, isWaiting: undefined };
+const updateAll = (key, bool) => {
+  for (const item of [candleState, horseState]) {
+    item[key] = bool;
+  }
+};
 function ChanUplot() {
   console.count("enter Chan:");
 
@@ -25,16 +34,40 @@ function ChanUplot() {
   const [isLoading, setLoading] = useState(true);
   const [dataObj, setDataObj] = useState({});
   const [time, setTime] = useState(Date.now());
-
   useEffect(async () => {
     const url = useApi(config, "initRequest", loopCount);
     useFetchData(
       url,
       (data) => {
-        const dataObj = funcDataObj(data, config);
-        setDataObj(dataObj);
+        gdo = genDataObj(data, config);
+        res = gdo.next(); //js生成器的第一次传参会被忽略掉,所以只拿结果不要传参
+        console.log("return0:", { ...res.value?.tohlcv });
+        console.log("return0:", { ...res.value?.sma });
+        console.log("return0:", { ...res.value?.horse });
+        // res = gdo.next(); //没新数据时自动返回undefined
+        // console.log("return1:", { ...res.value?.sma });
+        // console.log("return1:", { ...res.value?.horse });
+        // res = gdo.next([[1636728900 + 600], [4234 + 20], [4234 + 2000], [4234 + 20], [1000, 2000], [10]]);
+        // console.log("return2:", { ...res.value?.sma }); //传递多个数据则批量返回
+        // console.log("return2:", { ...res.value?.horse });
+        // res = gdo.next([[], [], [], []]); //没新数据时自动返回undefined
+        // console.log("return3:", { ...res.value?.sma });
+        // console.log("return3:", { ...res.value?.horse });
+        // res = ataObj.next([]); //没新数据时自动返回undefined
+        // console.log("return4:", { ...res.value?.sma });
+        // console.log("return4:", { ...res.value?.horse });
+        // res = gdo.next([[1636728900 + 900], [4234 + 20], [4234 + 2000], [4234 + 20], [123, 465, 789], [10]]);
+        // console.log("return5:", { ...res.value?.sma }); //传递多个数据则批量返回
+        // console.log("return5:", { ...res.value?.horse });
+        if (res.value == undefined) {
+          debugger;
+        }
+        setDataObj(res.value);
         setLoading(false);
-        console.log("init set data:", dataObj);
+        updateAll("isInit", true);
+        updateAll("isUpdate", false);
+        updateAll("isWaiting", false);
+        // console.log("init set data:", res.value);
       },
       (resData) => resData
     );
@@ -50,20 +83,37 @@ function ChanUplot() {
     useFetchData(
       url,
       (updateData) => {
-        const combineDataObj = funcCombineUpdateDataObj(dataObj.tohlcv, updateData, dataObj, config);
-        setDataObj(combineDataObj);
-        console.log("update data:", combineDataObj);
+        const cutData = funcCutUpdateData(dataObj.tohlcv, updateData);
+        console.log("cut", cutData);
+
+        if (cutData != undefined && cutData[0].length > 0) {
+          res = gdo.next(cutData);
+          console.log("update0:", { ...res.value?.tohlcv });
+          console.log("update0:", { ...res.value?.sma });
+          console.log("update0:", { ...res.value?.horse });
+          updateAll("isInit", false);
+          updateAll("isUpdate", true);
+          updateAll("isWaiting", false);
+        } else {
+          updateAll("isInit", false);
+          updateAll("isUpdate", false);
+          updateAll("isWaiting", true);
+        }
+        setDataObj({ ...res.value });
       },
       (resData) => resData
     );
   }
-  console.log("wait...");
   useLoop({ ...config, time: time, setTime: setTime }, updateData);
   console.log("end Chan:");
   return (
     <div style={{ display: "none_" }}>
-      <CandlePlot dataObj={dataObj} config={config} opt={{}} />
-      <HorsePlot dataObj={dataObj} config={config} opt={{}} />
+      <div id="candlePlot">
+        <CandlePlot dataObj={dataObj} config={config} state={candleState} />
+      </div>
+      <div id="horsePlot">
+        <HorsePlot dataObj={dataObj} config={config} state={horseState} />
+      </div>
     </div>
   );
 }

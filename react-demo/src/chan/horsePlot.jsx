@@ -1,21 +1,38 @@
 import UplotReact from "uplot-react";
-import horseOpt from "./horseOpt";
-import { funcDataUplot } from "../func/generateIndicator";
 import React, { useState } from "react";
+import usePlot from "../hook/usePlot";
+import getOpt from "./horseOpt";
 
-function HorsePlot({ dataObj, config }) {
-  const opt = horseOpt({ dataObj, config });
-  const uplotData = [dataObj.tohlcv[0].slice(config.smaExtra), []];
-
-  console.log("render horsePlot:", uplotData);
+const rangeState = {
+  minLast: undefined,
+  maxLast: undefined,
+  dataCountCurrent: undefined,
+  dataCountLast: undefined,
+};
+function HorsePlot({ dataObj, config, state }) {
+  let mode = "opt"; //horse需要从插件中加载数据,如果用data模式,数据会空
+  const [uplotData, uplotData_cur, opt] = usePlot({
+    mode: mode,
+    id: "horsePlot",
+    getOpt,
+    dataObj,
+    config,
+    state,
+    rangeState,
+  });
   return (
     <UplotReact
       key="hooks-key"
       options={opt}
       data={uplotData}
       //   target={root}
-      onDelete={() => console.log("Deleted from hooks")}
-      onCreate={() => console.log("Created from hooks")}
+      onDelete={() => console.log("Deleted from hooks horseUplot")}
+      onCreate={(u) => {
+        console.log("Created from hooks horseUplot");
+        if (mode == "opt") {
+          u.setData(uplotData_cur);
+        }
+      }}
     />
   );
 }

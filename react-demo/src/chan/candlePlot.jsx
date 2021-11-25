@@ -1,29 +1,39 @@
 import UplotReact from "uplot-react";
-import candleOpt from "./candleOpt";
-import { funcDataUplot } from "../func/generateIndicator";
 import React, { useState } from "react";
+import usePlot from "../hook/usePlot";
+import getOpt from "./candleOpt";
 
-function CandlePlot({ dataObj, config }) {
-  const [opt, setOpt] = useState(candleOpt({ dataObj, config }));
-  const title = "candle";
-  if (opt.title != title) {
-    setOpt((opt) => {
-      opt["title"] = title;
-      opt["series"][1]["stroke"] = "rgb(100,100,200)";
-      console.log("change Candle opt:", opt);
-      return opt;
-    });
-  }
-  const uplotData = funcDataUplot(dataObj, config);
-
+const rangeState = {
+  minLast: undefined,
+  maxLast: undefined,
+  dataCountCurrent: undefined,
+  dataCountLast: undefined,
+};
+function CandlePlot({ dataObj, config, state }) {
+  let mode = "opt";
+  const [uplotData, uplotData_cur, opt] = usePlot({
+    mode: mode,
+    id: "candlePlot",
+    getOpt,
+    dataObj,
+    config,
+    state,
+    rangeState,
+  });
   return (
     <UplotReact
       key="hooks-key"
       options={opt}
       data={uplotData}
       //   target={root}
-      onDelete={() => console.log("Deleted from hooks")}
-      onCreate={() => console.log("Created from hooks")}
+      onDelete={() => console.log("Deleted from hooks horseUplot")}
+      onCreate={(u) => {
+        console.log("Created from hooks horseUplot");
+        if (mode == "opt") {
+          //在这加载数据的好处是只渲染一次(通过更新opt来刷新数据),在isUpdateCandle里加载会渲染两次
+          u.setData(uplotData_cur);
+        }
+      }}
     />
   );
 }
