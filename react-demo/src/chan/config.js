@@ -1,7 +1,7 @@
 const config = {
   name: "SHFE.RB",
   frequency: "300s",
-  count: 100,
+  count: 200,
   refresh: false,
   updateCount: 3,
   updateRefresh: false,
@@ -17,9 +17,11 @@ const config = {
     [0, 0, 255],
     [255, 0, 255],
   ],
-  fake: true,
-  fakeNum: 60,
-  fakeStep: 2,
+  fake: true, //是否启用假数据
+  fakeNum: 20,
+  fakeStep: 5,
+  rangeFactor: 0.7, //rangePlot移动当前窗口的百分比
+  rangerMinimumSpacing: 10, //rangePlot的最小缩放间隔
 };
 config.smaExtra = config.smaLevel[config.smaLevel.length - 1] - 1;
 if (config.count <= config.fakeNum) {

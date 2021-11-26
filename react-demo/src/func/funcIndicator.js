@@ -88,6 +88,7 @@ export function funcDataObj(tohlcvData, config) {
 }
 
 export function funcCutUpdateData(preTohlcvData, curTohlcvData) {
+  if (curTohlcvData == null) return undefined;
   const lastTime = preTohlcvData[0][preTohlcvData[0].length - 1];
   const idx = curTohlcvData[0].indexOf(lastTime);
   return idx == -1 ? undefined : curTohlcvData.map((i) => i.slice(idx + 1));

@@ -11,13 +11,13 @@ let mode = "opt"; //data 或者是 opt 不同的写法
 //如果是data模式,就只需要在isUpdateCandle里写setData
 //data模式的好处是,不需要重构UplotReact组件,更新数据的时候只需要刷新图表就好了,不会触发onCreate和onDelete,但是不允许在更新数据的时候改变opt,只能在初始化时改变
 
-export default function usePlot({ mode, id, dataObj, config, getOpt, state, rangeState }) {
+export default function usePlot({ mode, id, dataObj, config, getOpt, state, rangeState, plots }) {
   console.log(`enter ${id}`);
 
   const uplotData_cur = funcDataUplot(dataObj, config, "sma");
   const [uplotData, setUplotData] = useState(uplotData_cur);
   const [opt, setOpt] = useState();
-  const newOpt = getOpt({ dataObj, config });
+  const newOpt = getOpt({ dataObj, config, plots });
 
   rangeState.dataCountCurrent = uplotData_cur[0].length;
 

@@ -8,6 +8,7 @@ import "uplot/dist/uPlot.min.css";
 //引用图表
 import CandlePlot from "./candlePlot";
 import HorsePlot from "./horsePlot";
+import RangePlot from "./rangePlot";
 //引用配置文件
 import initConfig from "./config";
 import candleOpt from "./candleOpt";
@@ -22,11 +23,13 @@ let loopCount = 0;
 let gdo, res;
 const candleState = { isInit: undefined, isUpdate: undefined, isWaiting: undefined };
 const horseState = { isInit: undefined, isUpdate: undefined, isWaiting: undefined };
+const rangeState = { isInit: undefined, isUpdate: undefined, isWaiting: undefined };
 const updateAll = (key, bool) => {
-  for (const item of [candleState, horseState]) {
+  for (const item of [candleState, horseState, rangeState]) {
     item[key] = bool;
   }
 };
+const plots = {};
 function ChanUplot() {
   console.count("enter Chan:");
 
@@ -44,21 +47,6 @@ function ChanUplot() {
         console.log("return0:", { ...res.value?.tohlcv });
         console.log("return0:", { ...res.value?.sma });
         console.log("return0:", { ...res.value?.horse });
-        // res = gdo.next(); //没新数据时自动返回undefined
-        // console.log("return1:", { ...res.value?.sma });
-        // console.log("return1:", { ...res.value?.horse });
-        // res = gdo.next([[1636728900 + 600], [4234 + 20], [4234 + 2000], [4234 + 20], [1000, 2000], [10]]);
-        // console.log("return2:", { ...res.value?.sma }); //传递多个数据则批量返回
-        // console.log("return2:", { ...res.value?.horse });
-        // res = gdo.next([[], [], [], []]); //没新数据时自动返回undefined
-        // console.log("return3:", { ...res.value?.sma });
-        // console.log("return3:", { ...res.value?.horse });
-        // res = ataObj.next([]); //没新数据时自动返回undefined
-        // console.log("return4:", { ...res.value?.sma });
-        // console.log("return4:", { ...res.value?.horse });
-        // res = gdo.next([[1636728900 + 900], [4234 + 20], [4234 + 2000], [4234 + 20], [123, 465, 789], [10]]);
-        // console.log("return5:", { ...res.value?.sma }); //传递多个数据则批量返回
-        // console.log("return5:", { ...res.value?.horse });
         if (res.value == undefined) {
           debugger;
         }
@@ -107,12 +95,13 @@ function ChanUplot() {
   useLoop({ ...config, time: time, setTime: setTime }, updateData);
   console.log("end Chan:");
   return (
-    <div style={{ display: "none_" }}>
+    <div id="plots" style={{ display: "none_" }}>
       <div id="candlePlot">
-        <CandlePlot dataObj={dataObj} config={config} state={candleState} />
+        <CandlePlot dataObj={dataObj} config={config} state={candleState} plots={plots} />
       </div>
-      <div id="horsePlot">
-        <HorsePlot dataObj={dataObj} config={config} state={horseState} />
+      <div id="horsePlot">{/* <HorsePlot dataObj={dataObj} config={config} state={horseState} plots={plots} /> */}</div>
+      <div id="rangePlot">
+        <RangePlot dataObj={dataObj} config={config} state={rangeState} plots={plots} />
       </div>
     </div>
   );

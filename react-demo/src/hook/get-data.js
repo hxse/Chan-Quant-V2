@@ -24,6 +24,9 @@ export function useApi(config, mode, loopCount) {
       let end =
         config.count + smaExtra - config.fakeNum + (loopCount - 1) * config.fakeStep + Math.floor(config.fakeStep);
       api = api + `&testUpdate=${true}&splitStart=${start}&splitEnd=${end}`;
+      if (start > config.count + smaExtra) {
+        api = null; //返回null会默认忽略这次请求
+      }
     }
   }
   return api;
@@ -38,7 +41,7 @@ async function fetchData(url) {
   }
 }
 export async function useFetchData(url, batchedUpdates, fake = null) {
-  const data = await fetchData(url);
+  let data = url == null ? null : await fetchData(url);
   unstable_batchedUpdates(() => {
     //因为在异步函数中,所以react不会自动进行批处理的,所以需要引入unstable_batchedUpdates
     //在react18中会自动批处理

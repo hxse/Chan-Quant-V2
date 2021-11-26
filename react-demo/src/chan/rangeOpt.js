@@ -1,3 +1,4 @@
+import wheelPanPlugin from "../plugin/wheelPanPlugin.js";
 import wheelZoomPlugin from "../plugin/wheelZoomPlugin";
 import uPlot from "uplot";
 const fmtUSD = (val, dec) => "$" + val.toFixed(dec).replace(/\d(?=(\d{3})+(?:\.|$))/g, "$&,");
@@ -6,14 +7,17 @@ const tz = 1 == 1 ? "Asia/Shanghai" : "Etc/UTC";
 const tzDate = (ts) => uPlot.tzDate(new Date(ts * 1e3), tz);
 
 const cursorOpts = {
-  y: true,
-  lock: false, //这个用了会出bug,反正也没用,建议别用
-  focus: {
-    prox: 16,
+  y: false,
+  points: {
+    show: false,
+  },
+  drag: {
+    setScale: false,
+    x: true,
+    y: false,
   },
   sync: {
     key: "moo",
-    setSeries: true,
   },
 };
 
@@ -31,22 +35,16 @@ function createSeriesOpt(config) {
   }
   return [];
 }
-const options = ({ dataObj, config }) => {
+const options = ({ dataObj, config, plots }) => {
   return {
     title: "Chart",
     width: 600,
-    height: 300,
+    height: 120,
     cursor: cursorOpts,
     series: [
       {
         label: "Date",
-        value: (u, ts) => {
-          let time = fmtDate(tzDate(ts))
-          if (!time){
-            debugger
-          }
-         return time;
-        },
+        value: (u, ts) => fmtDate(tzDate(ts)),
       },
       ...createSeriesOpt(config),
     ],
@@ -56,7 +54,7 @@ const options = ({ dataObj, config }) => {
     legend: {
       show: false,
     },
-    // plugins: [wheelZoomPlugin({ factor: 0.75 })],
+    plugins: [wheelPanPlugin(plots, config.rangeFactor, config.rangerMinimumSpacing)],
   };
 };
 

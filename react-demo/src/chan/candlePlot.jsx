@@ -9,11 +9,12 @@ const rangeState = {
   dataCountCurrent: undefined,
   dataCountLast: undefined,
 };
-function CandlePlot({ dataObj, config, state }) {
+function CandlePlot({ dataObj, config, state, plots }) {
   let mode = "opt";
+  const id = "candlePlot";
   const [uplotData, uplotData_cur, opt] = usePlot({
+    id: id,
     mode: mode,
-    id: "candlePlot",
     getOpt,
     dataObj,
     config,
@@ -29,6 +30,7 @@ function CandlePlot({ dataObj, config, state }) {
       onDelete={() => console.log("Deleted from hooks horseUplot")}
       onCreate={(u) => {
         console.log("Created from hooks horseUplot");
+        plots[id] = u;
         if (mode == "opt") {
           //在这加载数据的好处是只渲染一次(通过更新opt来刷新数据),在isUpdateCandle里加载会渲染两次
           u.setData(uplotData_cur);
