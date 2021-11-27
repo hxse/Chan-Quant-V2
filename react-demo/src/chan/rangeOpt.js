@@ -6,6 +6,8 @@ const fmtDate = uPlot.fmtDate("{YYYY}-{MM}-{DD}-{HH}-{mm}");
 const tz = 1 == 1 ? "Asia/Shanghai" : "Etc/UTC";
 const tzDate = (ts) => uPlot.tzDate(new Date(ts * 1e3), tz);
 
+import {getSize} from "./sizeEvent";
+
 const cursorOpts = {
   y: false,
   points: {
@@ -36,10 +38,11 @@ function createSeriesOpt(config) {
   return [];
 }
 const options = ({ dataObj, config, plots }) => {
+  const { plotWidth, plotHeight, rangeHeight, parentHeight } = getSize();
   return {
     title: "Chart",
-    width: 600,
-    height: 120,
+    width: plotWidth,
+    height: rangeHeight,
     cursor: cursorOpts,
     series: [
       {

@@ -1,31 +1,32 @@
+export function rangePlotRefreshSelect(u, plots) {
+  //刷新rangePlot的范围选择范围,在每次数据更新时,根据candlePlot显示范围
+  let candlePlot = plots.candlePlot;
+  //当前candlePlot图表显示范围
+  let xMin_cur = candlePlot.scales.x.min;
+  let xMax_cur = candlePlot.scales.x.max;
+  //当前图表现实像素
+  let left_cur = Math.round(u.valToPos(xMin_cur, "x"));
+  let width_cur = Math.round(u.valToPos(xMax_cur, "x")) - left_cur;
+  let height_cur = u.bbox.height / devicePixelRatio;
+  //设置rangePlot的选择范围
+  u.setSelect(
+    {
+      left: left_cur,
+      width: width_cur,
+      height: height_cur,
+    },
+    false
+  );
+}
+
 function wheelPanPlugin(plots, rangeFactor, rangerMinimumSpacing) {
   rangeFactor = rangeFactor || 0.75;
   rangerMinimumSpacing = rangerMinimumSpacing || 3;
 
-  function rangePlotRefreshSelect(u, plots) {
-    //刷新rangePlot的范围选择范围,在每次数据更新时,根据candlePlot显示范围
-    let candlePlot = plots.candlePlot;
-    //当前candlePlot图表显示范围
-    let xMin_cur = candlePlot.scales.x.min;
-    let xMax_cur = candlePlot.scales.x.max;
-    //当前图表现实像素
-    let left_cur = Math.round(u.valToPos(xMin_cur, "x"));
-    let width_cur = Math.round(u.valToPos(xMax_cur, "x")) - left_cur;
-    let height_cur = u.bbox.height / devicePixelRatio;
-    //设置rangePlot的选择范围
-    u.setSelect(
-      {
-        left: left_cur,
-        width: width_cur,
-        height: height_cur,
-      },
-      false
-    );
-  }
-
   function dbClickSelect(u, plots) {
     //重写鼠标双击事件,可以在任意图表双击后自动全选rangePlot
     for (const [key, item] of Object.entries(plots)) {
+      if (!item) continue;
       //依次给每个图表添加双击监听事件
       let plotOver = item.root.querySelector(".u-over");
       plotOver.addEventListener("dblclick", () => {
@@ -85,6 +86,7 @@ function wheelPanPlugin(plots, rangeFactor, rangerMinimumSpacing) {
 
       u.batch(() => {
         for (const [key, item] of Object.entries(plots)) {
+          if (!item) continue;
           if (key == "rangePlot") {
             // 滚动缩放
             let left = Math.round(item.valToPos(nxMin, "x"));

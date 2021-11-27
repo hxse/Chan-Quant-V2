@@ -1,11 +1,12 @@
 const config = {
+  plots: { candlePlot: true, horsePlot: true, rangePlot: true }, //true为启用,false为不启用,candlePlot和rangePlot不要设置false,可能引起某些功能不工作
   name: "SHFE.RB",
-  frequency: "300s",
-  count: 200,
+  frequency: "900s",
+  count: 300,
   refresh: false,
-  updateCount: 3,
+  updateCount: 3, //如果启用了fake模式,这个值被忽略,否则按这个值来更新
   updateRefresh: false,
-  updateMode: "timeout", //更新模式
+  updateMode: "timeout ", //更新模式
   lazyTime: 1500, //更新延时,
   smaLevel: [2, 4, 8, 16, 32, 64],
   smaLevel: [2, 4, 8, 16],
@@ -18,7 +19,7 @@ const config = {
     [255, 0, 255],
   ],
   fake: true, //是否启用假数据
-  fakeNum: 20,
+  fakeNum: 50,
   fakeStep: 5,
   rangeFactor: 0.7, //rangePlot移动当前窗口的百分比
   rangerMinimumSpacing: 10, //rangePlot的最小缩放间隔

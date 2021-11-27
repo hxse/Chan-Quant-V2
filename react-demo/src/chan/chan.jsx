@@ -10,7 +10,7 @@ import CandlePlot from "./candlePlot";
 import HorsePlot from "./horsePlot";
 import RangePlot from "./rangePlot";
 //引用配置文件
-import initConfig from "./config";
+import config from "./config";
 import candleOpt from "./candleOpt";
 //引用hook动作
 import useLoop from "../hook/loop-hook";
@@ -29,11 +29,11 @@ const updateAll = (key, bool) => {
     item[key] = bool;
   }
 };
-const plots = {};
+const plots = config.plots;
+
 function ChanUplot() {
   console.count("enter Chan:");
 
-  const [config, setConfig] = useState(initConfig);
   const [isLoading, setLoading] = useState(true);
   const [dataObj, setDataObj] = useState({});
   const [time, setTime] = useState(Date.now());
@@ -97,11 +97,15 @@ function ChanUplot() {
   return (
     <div id="plots" style={{ display: "none_" }}>
       <div id="candlePlot">
-        <CandlePlot dataObj={dataObj} config={config} state={candleState} plots={plots} />
+        {plots.candlePlot ? (
+          <CandlePlot dataObj={dataObj} config={config} state={candleState} plots={plots} />
+        ) : undefined}
       </div>
-      <div id="horsePlot">{/* <HorsePlot dataObj={dataObj} config={config} state={horseState} plots={plots} /> */}</div>
-      <div id="rangePlot">
-        <RangePlot dataObj={dataObj} config={config} state={rangeState} plots={plots} />
+      <div id="horsePlot">
+        {plots.horsePlot ? <HorsePlot dataObj={dataObj} config={config} state={horseState} plots={plots} /> : undefined}
+      </div>
+      <div id="rangePlot" style={{ height: "" }}>
+        {plots.rangePlot ? <RangePlot dataObj={dataObj} config={config} state={rangeState} plots={plots} /> : undefined}
       </div>
     </div>
   );

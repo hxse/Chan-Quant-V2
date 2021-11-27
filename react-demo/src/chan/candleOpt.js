@@ -5,6 +5,8 @@ const fmtDate = uPlot.fmtDate("{YYYY}-{MM}-{DD}-{HH}-{mm}");
 const tz = 1 == 1 ? "Asia/Shanghai" : "Etc/UTC";
 const tzDate = (ts) => uPlot.tzDate(new Date(ts * 1e3), tz);
 
+import {getSize} from "./sizeEvent";
+
 const cursorOpts = {
   y: true,
   lock: false, //这个用了会出bug,反正也没用,建议别用
@@ -31,27 +33,76 @@ function createSeriesOpt(config) {
   }
   return [];
 }
+const xFormat = () => {
+  //好像没什么用,算了,这个不重要
+  return {
+    space: 40,
+    incrs: [
+      // minute divisors (# of secs)
+      1,
+      5,
+      10,
+      15,
+      30,
+      // hour divisors
+      60,
+      60 * 5,
+      60 * 10,
+      60 * 15,
+      60 * 30,
+      // day divisors
+      3600,
+      // ...
+    ],
+    // [0]:   minimum num secs in found axis split (tick incr)
+    // [1]:   default tick format
+    // [2-7]: rollover tick formats
+    // [8]:   mode: 0: replace [1] -> [2-7], 1: concat [1] + [2-7]
+    values: [
+      // tick incr          default           year                             month    day                        hour     min                sec       mode
+      [3600 * 24 * 365, "{YYYY}", null, null, null, null, null, null, 1],
+      [3600 * 24 * 28, "{MMM}", "\n{YYYY}", null, null, null, null, null, 1],
+      [3600 * 24, "{M}/{D}", "\n{YYYY}", null, null, null, null, null, 1],
+      [3600, "{h}{aa}", "\n{M}/{D}/{YY}", null, "\n{M}/{D}", null, null, null, 1],
+      [60, "{h}:{mm}{aa}", "\n{M}/{D}/{YY}", null, "\n{M}/{D}", null, null, null, 1],
+      [1, ":{ss}", "\n{M}/{D}/{YY} {h}:{mm}{aa}", null, "\n{M}/{D} {h}:{mm}{aa}", null, "\n{h}:{mm}{aa}", null, 1],
+      [
+        0.001,
+        ":{ss}.{fff}",
+        "\n{M}/{D}/{YY} {h}:{mm}{aa}",
+        null,
+        "\n{M}/{D} {h}:{mm}{aa}",
+        null,
+        "\n{h}:{mm}{aa}",
+        null,
+        1,
+      ],
+    ],
+  };
+};
 const options = ({ dataObj, config }) => {
+  const { plotWidth, plotHeight, rangeHeight, parentHeight } = getSize();
   return {
     title: "Chart",
-    width: 600,
-    height: 300,
+    width: plotWidth,
+    height: plotHeight,
     cursor: cursorOpts,
     series: [
       {
         label: "Date",
         value: (u, ts) => {
-          let time = fmtDate(tzDate(ts))
-          if (!time){
-            debugger
-          }
-         return time;
+          let time = fmtDate(tzDate(ts));
+          return time;
         },
+        ...xFormat(),
       },
       ...createSeriesOpt(config),
     ],
     scales: {
-      x: { time: true, distr: 2 },
+      x: {
+        time: true,
+        distr: 2,
+      },
     },
     legend: {
       show: false,

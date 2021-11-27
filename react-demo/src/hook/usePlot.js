@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { funcDataUplot } from "../func/funcIndicator";
 import uPlot from "uplot";
+import { plotAutoSize } from "../chan/sizeEvent";
 
 // let minLast, maxLast, dataCountCurrent, dataCountLast;
 //用这个不行,因为在不同组件复用hook时,这些变量会共享,引发冲突,应该用useState(),变量就不会共享了
@@ -21,7 +22,14 @@ export default function usePlot({ mode, id, dataObj, config, getOpt, state, rang
 
   rangeState.dataCountCurrent = uplotData_cur[0].length;
 
-  newOpt["title"] = "candle";
+  useEffect(() => {
+    //组件渲染后执行
+    if (id == "rangePlot") {
+      //自动监听浏览器窗口缩放resize
+      plotAutoSize(plots);
+    }
+  }, []);
+
   newOpt["scales"]["x"] = {
     ...newOpt["scales"]["x"],
     range: (u, min, max) => {
@@ -38,9 +46,9 @@ export default function usePlot({ mode, id, dataObj, config, getOpt, state, rang
       rangeState.dataCountLast = rangeState.dataCountCurrent;
       rangeState.minLast = min;
       rangeState.maxLast = max;
-      console.log("实际重绘坐标", min, max, uPlot.rangeNum(0, min, max, true));
-      // return [min, max];
-      return uPlot.rangeNum(min, max, 0, true);
+      console.log("实际重绘坐标", [min, max], uPlot.rangeNum(min, max, 0, true));
+      return [min, max];
+      return uPlot.rangeNum(min, max, 0, true); //这个别用,会出bug,[min,max]就是最准的
     },
   };
 
@@ -49,12 +57,17 @@ export default function usePlot({ mode, id, dataObj, config, getOpt, state, rang
     rangeState.minLast = 0;
     rangeState.maxLast = uplotData_cur[0].length - 1;
     console.log("init set newOpt");
+    let title = "initing...";
+    title = null;
+    newOpt["title"] = title;
     setOpt(newOpt);
     // setUplotData(uplotData_cur);
   }
   if (state.isUpdate) {
     state.isUpdate = false;
-    const title = "upDateing...";
+    // debugger
+    let title = "upDateing...";
+    title = null;
     newOpt["title"] = title;
     if (mode == "opt") {
       setOpt(newOpt);
@@ -66,7 +79,8 @@ export default function usePlot({ mode, id, dataObj, config, getOpt, state, rang
   }
   if (state.isWaiting) {
     state.isWaiting = false;
-    const title = "waiting...";
+    let title = "waiting...";
+    title = null;
     if (opt["title"] != title) {
       newOpt["title"] = title;
       // setOpt(newOpt);//不能用这个,因为会重新渲染性能浪费,而且会刷新range,直接用querySelector

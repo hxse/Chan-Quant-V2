@@ -20,6 +20,7 @@ function HorsePlot({ dataObj, config, state, plots }) {
     config,
     state,
     rangeState,
+    plots,
   });
   return (
     <UplotReact

@@ -20,6 +20,7 @@ function CandlePlot({ dataObj, config, state, plots }) {
     config,
     state,
     rangeState,
+    plots,
   });
   return (
     <UplotReact
@@ -27,9 +28,9 @@ function CandlePlot({ dataObj, config, state, plots }) {
       options={opt}
       data={uplotData}
       //   target={root}
-      onDelete={() => console.log("Deleted from hooks horseUplot")}
+      onDelete={() => console.log("Deleted from hooks candleUplot")}
       onCreate={(u) => {
-        console.log("Created from hooks horseUplot");
+        console.log("Created from hooks candleUplot");
         plots[id] = u;
         if (mode == "opt") {
           //在这加载数据的好处是只渲染一次(通过更新opt来刷新数据),在isUpdateCandle里加载会渲染两次
