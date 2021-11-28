@@ -5,7 +5,8 @@ export function getSize() {
   const plots = config.plots;
   const bodyWidth = window.innerWidth;
   const bodyHeight = window.innerHeight;
-  const plotWidth = bodyWidth - 20;
+  const boardWidth = bodyWidth / 5;
+  const plotWidth = bodyWidth - boardWidth;
   const filterPlot = Object.entries(plots).filter(([key, item]) => (item && key != "rangePlot" ? true : false));
   const rangeHeight = 130;
   const plotHeight = (bodyHeight - rangeHeight - 1) / filterPlot.length;
@@ -15,6 +16,7 @@ export function getSize() {
     rangeHeight,
     plotHeight,
     parentHeight,
+    boardWidth,
   };
 }
 
@@ -22,7 +24,9 @@ export function plotAutoSize(plots) {
   //根据窗口,动态缩放图表
   const resizeEvent = new Event("resize");
   window.addEventListener("resize", () => {
-    const { plotWidth, plotHeight, rangeHeight, parentHeight } = getSize();
+    const { plotWidth, plotHeight, rangeHeight, parentHeight, boardWidth } = getSize();
+    document.querySelector("#plots").style.width = `${plotWidth}px`;
+    document.querySelector("#board").style.width = `${boardWidth}px`;
     for (const [key, item] of Object.entries(plots)) {
       if (!item) continue;
       //图表缩放
@@ -35,8 +39,10 @@ export function plotAutoSize(plots) {
       }
 
       //隐藏x轴
-      item.root.parentElement.style.height = parentHeight;
-      item.root.parentElement.style.overflow = "hidden";
+      if (key != "candlePlot" && key != "rangePlot") {
+        item.root.parentElement.style.height = parentHeight;
+        item.root.parentElement.style.overflow = "hidden";
+      }
     }
   });
   window.dispatchEvent(resizeEvent);

@@ -6,8 +6,8 @@ const config = {
   refresh: false,
   updateCount: 3, //如果启用了fake模式,这个值被忽略,否则按这个值来更新
   updateRefresh: false,
-  updateMode: "timeout ", //更新模式
-  lazyTime: 1500, //更新延时,
+  updateMode: "timeout", //更新模式
+  lazyTime: 2000, //更新延时,
   smaLevel: [2, 4, 8, 16, 32, 64],
   smaLevel: [2, 4, 8, 16],
   smaColor: [
@@ -19,7 +19,7 @@ const config = {
     [255, 0, 255],
   ],
   fake: true, //是否启用假数据
-  fakeNum: 50,
+  fakeNum: 20,
   fakeStep: 5,
   rangeFactor: 0.7, //rangePlot移动当前窗口的百分比
   rangerMinimumSpacing: 10, //rangePlot的最小缩放间隔

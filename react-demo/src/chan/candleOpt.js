@@ -5,7 +5,7 @@ const fmtDate = uPlot.fmtDate("{YYYY}-{MM}-{DD}-{HH}-{mm}");
 const tz = 1 == 1 ? "Asia/Shanghai" : "Etc/UTC";
 const tzDate = (ts) => uPlot.tzDate(new Date(ts * 1e3), tz);
 
-import {getSize} from "./sizeEvent";
+import { getSize } from "./sizeEvent";
 
 const cursorOpts = {
   y: true,
@@ -90,11 +90,8 @@ const options = ({ dataObj, config }) => {
     series: [
       {
         label: "Date",
-        value: (u, ts) => {
-          let time = fmtDate(tzDate(ts));
-          return time;
-        },
-        ...xFormat(),
+        value: (u, ts) => fmtDate(tzDate(ts)),
+        // ...xFormat(),
       },
       ...createSeriesOpt(config),
     ],

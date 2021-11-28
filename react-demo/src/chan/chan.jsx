@@ -9,6 +9,7 @@ import "uplot/dist/uPlot.min.css";
 import CandlePlot from "./candlePlot";
 import HorsePlot from "./horsePlot";
 import RangePlot from "./rangePlot";
+import Board from "./board";
 //引用配置文件
 import config from "./config";
 import candleOpt from "./candleOpt";
@@ -24,8 +25,9 @@ let gdo, res;
 const candleState = { isInit: undefined, isUpdate: undefined, isWaiting: undefined };
 const horseState = { isInit: undefined, isUpdate: undefined, isWaiting: undefined };
 const rangeState = { isInit: undefined, isUpdate: undefined, isWaiting: undefined };
+const boardState = { isInit: undefined, isUpdate: undefined, isWaiting: undefined };
 const updateAll = (key, bool) => {
-  for (const item of [candleState, horseState, rangeState]) {
+  for (const item of [candleState, horseState, rangeState, boardState]) {
     item[key] = bool;
   }
 };
@@ -95,17 +97,32 @@ function ChanUplot() {
   useLoop({ ...config, time: time, setTime: setTime }, updateData);
   console.log("end Chan:");
   return (
-    <div id="plots" style={{ display: "none_" }}>
-      <div id="candlePlot">
-        {plots.candlePlot ? (
-          <CandlePlot dataObj={dataObj} config={config} state={candleState} plots={plots} />
-        ) : undefined}
+    <div
+      id="chart"
+      style={{
+        display: "flex",
+        flexDirection: "row",
+      }}
+    >
+      <div id="plots" style={{ display: "none_" }}>
+        <div id="candlePlot">
+          {plots.candlePlot ? (
+            <CandlePlot dataObj={dataObj} config={config} state={candleState} plots={plots} />
+          ) : undefined}
+        </div>
+        <div id="horsePlot">
+          {plots.horsePlot ? (
+            <HorsePlot dataObj={dataObj} config={config} state={horseState} plots={plots} />
+          ) : undefined}
+        </div>
+        <div id="rangePlot" style={{ height: "" }}>
+          {plots.rangePlot ? (
+            <RangePlot dataObj={dataObj} config={config} state={rangeState} plots={plots} />
+          ) : undefined}
+        </div>
       </div>
-      <div id="horsePlot">
-        {plots.horsePlot ? <HorsePlot dataObj={dataObj} config={config} state={horseState} plots={plots} /> : undefined}
-      </div>
-      <div id="rangePlot" style={{ height: "" }}>
-        {plots.rangePlot ? <RangePlot dataObj={dataObj} config={config} state={rangeState} plots={plots} /> : undefined}
+      <div id="board">
+        <Board dataObj={dataObj} config={config} state={boardState} plots={plots}></Board>
       </div>
     </div>
   );
