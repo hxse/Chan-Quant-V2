@@ -28,4 +28,5 @@ config.smaExtra = config.smaLevel[config.smaLevel.length - 1] - 1;
 if (config.count <= config.fakeNum) {
   debugger;
 }
+config.board = ["time_", "close_", "time", "close", "sma2", "sma4", "horse2", "horse4", "horse8"]; //如果加了下划线,就代表是更新时的数据
 export default config;

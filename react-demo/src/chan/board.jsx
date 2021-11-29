@@ -4,43 +4,44 @@ import { unstable_batchedUpdates } from "react-dom";
 
 import uPlot from "uplot";
 const fmtUSD = (val, dec) => "$" + val.toFixed(dec).replace(/\d(?=(\d{3})+(?:\.|$))/g, "$&,");
-const fmtDate = uPlot.fmtDate("{YYYY}-{MM}-{DD}-{HH}-{mm}");
+const fmtDate = uPlot.fmtDate("{YYYY}-{MM}-{DD}/ {HH} :{mm}");
 const tz = 1 == 1 ? "Asia/Shanghai" : "Etc/UTC";
 const tzDate = (ts) => uPlot.tzDate(new Date(ts * 1e3), tz);
 
 function Board({ dataObj, config, state, plots }) {
-  const [time, setTime] = useState(); //光标指向的时间
-  const [close, setClose] = useState();
-  const [time_, setTime_] = useState(); //最新更新的时间
-  const [close_, setClose_] = useState();
   const [isLoading, setLoading] = useState(true);
+  const [moveData, setMoveData] = useState({}); //最新更新的时间
+  const [updateData, setUpdateData] = useState({});
 
+  function updateBoard(idx) {
+    const [time, open, high, low, close, volume] = dataObj.tohlcv.map((i) => i[idx]);
+    let data = { time: fmtDate(tzDate(parseInt(time))), open, high, low, close, volume };
+    function addData(data, dataArr) {
+      //dataArr的数据结构为字典
+      for (let [key, item] of Object.entries(dataArr)) {
+        data[key] = String(item[idx]);
+      }
+    }
+    addData(data, dataObj.sma);
+    addData(data, dataObj.horse);
+    return data;
+  }
   function onmove(e) {
     const plot = plots[e.path[4].id];
-    const idx = plot.cursor.idx;
-    const data = plot.data;
-    const [time, open, high, low, close] = data.map((i) => i[idx]);
-    unstable_batchedUpdates(() => {
-      setTime(time);
-      setClose(close);
-    });
+    const idx = plot.cursor.idx + config.smaExtra;
+    const data = updateBoard(idx);
+    setMoveData(data);
   }
-  function updateTime() {
-    const idx = plots.candlePlot.data[0].length - 1;
-    const data = plots.candlePlot.data;
-    const [time, open, high, low, close] = data.map((i) => i[idx]);
-    unstable_batchedUpdates(() => {
-      setTime_(time);
-      setClose_(close);
-    });
+  function onupdate() {
+    const idx = dataObj.tohlcv[0].length - 1;
+    const data = updateBoard(idx);
+    setUpdateData(data);
   }
 
   function upateLabel() {
     for (let [key, item] of Object.entries(plots)) {
       if (item == false) continue;
-      if (true) {
-        item.root.querySelector("div.u-over").addEventListener("mousemove", onmove);
-      }
+      item.root.querySelector("div.u-over").addEventListener("mousemove", onmove);
     }
   }
   useEffect(() => {
@@ -53,12 +54,12 @@ function Board({ dataObj, config, state, plots }) {
       setLoading(false);
       state.isInit = false;
       upateLabel();
-      updateTime(); //手动触发一下
+      onupdate(); //手动触发一下
     }
     if (state.isUpdate == true) {
       state.isUpdate = false;
       upateLabel();
-      updateTime();
+      onupdate(); //手动触发一下
     }
     if (state.isWaiting == true) {
       state.isWaiting = false;
@@ -70,14 +71,25 @@ function Board({ dataObj, config, state, plots }) {
   }
   return (
     <div>
-      time_: {time_ ? fmtDate(tzDate(parseInt(time_))) : null}
+      <div id="updateBoard">
+        {config.board.map((i) =>
+          i.endsWith("_") ? (
+            <div key={i}>
+              {i}: {updateData[i.slice(0, i.length - 1)]}
+            </div>
+          ) : undefined
+        )}
+      </div>
       <br />
-      close_: {close_}
-      <br />
-      time: {time ? fmtDate(tzDate(parseInt(time))) : null}
-      <br />
-      close: {close}
-      <br />
+      <div id="moveBoard">
+        {config.board.map((i) =>
+          i.endsWith("_") ? undefined : (
+            <div key={i}>
+              {i}: {moveData[i]}
+            </div>
+          )
+        )}
+      </div>
     </div>
   );
 }
