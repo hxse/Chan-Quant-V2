@@ -49,6 +49,7 @@ function ChanUplot() {
         console.log("return0:", { ...res.value?.tohlcv });
         console.log("return0:", { ...res.value?.sma });
         console.log("return0:", { ...res.value?.horse });
+        console.log("return0:", { ...res.value?.quant });
         if (res.value == undefined) {
           debugger;
         }
@@ -81,6 +82,7 @@ function ChanUplot() {
           console.log("update0:", { ...res.value?.tohlcv });
           console.log("update0:", { ...res.value?.sma });
           console.log("update0:", { ...res.value?.horse });
+          console.log("update0:", { ...res.value?.quant });
           updateAll("isInit", false);
           updateAll("isUpdate", true);
           updateAll("isWaiting", false);

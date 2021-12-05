@@ -13,13 +13,13 @@ const tzDate = (ts) => uPlot.tzDate(new Date(ts * 1e3), tz);
 
 const cursorOpts = {
   y: false,
-  lock: true,
+  lock: false,
   focus: {
     prox: 16,
   },
   sync: {
     key: "moo",
-    setSeries: true,
+    setSeries: false,
   },
 };
 
@@ -34,21 +34,20 @@ const options = ({ dataObj, config }) => {
     series: [
       {
         label: "Date",
-        value: (u, ts) => fmtDate(tzDate(ts)),
       },
       {},
-      //   ...createSeriesOpt(config),
     ],
     scales: {
       x: { time: true, distr: 2 },
       y: {
         range: [0, config.smaLevel.length - 1],
+        value: (u, v) => v + "L", //不知道为什么,这个没用
       },
     },
     legend: {
       show: false,
     },
-    plugins: [wheelZoomPlugin({ factor: 0.75 }), horsePlugin({ dataObj, config, horseData })],
+    plugins: [horsePlugin({ dataObj, config, horseData })],
   };
 };
 

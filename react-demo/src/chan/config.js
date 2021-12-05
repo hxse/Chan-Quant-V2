@@ -28,5 +28,30 @@ config.smaExtra = config.smaLevel[config.smaLevel.length - 1] - 1;
 if (config.count <= config.fakeNum) {
   debugger;
 }
-config.board = ["time_", "close_", "time", "close", "sma2", "sma4", "horse2", "horse4", "horse8"]; //如果加了下划线,就代表是更新时的数据
+config.board = [
+  // "time_",
+  // "close_",
+  "time",
+  "close",
+  // "sma2",
+  // "sma4",
+  // "horse2",
+  // "horse4",
+  // "horse8",
+  "quant8.idx",
+  "quant8.idxFull",
+  "quant8.isLeftEqual",
+  "quant8.isDownEqual",
+  "quant8.startIdx",
+  "quant8.childIdx",
+  "quant8.equalChildIdxArr",
+  "quant8.diffChildIdxArr",
+  "quant8.initChild",
+  "quant16.initChild",
+  "quant8.lastChildEqNum",
+  "quant16.lastChildEqNum",
+  "plan16.test",
+  "plan16.result",
+  "plan16.plans",
+]; //如果加了下划线,就代表是更新时的数据
 export default config;

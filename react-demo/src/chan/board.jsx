@@ -7,7 +7,10 @@ const fmtUSD = (val, dec) => "$" + val.toFixed(dec).replace(/\d(?=(\d{3})+(?:\.|
 const fmtDate = uPlot.fmtDate("{YYYY}-{MM}-{DD}/ {HH} :{mm}");
 const tz = 1 == 1 ? "Asia/Shanghai" : "Etc/UTC";
 const tzDate = (ts) => uPlot.tzDate(new Date(ts * 1e3), tz);
-
+function split(obj, arr) {
+  if (Object.keys(obj).length == 0) return undefined;
+  return arr.length > 1 ? split(obj[arr[0]], arr.slice(1)) : obj[arr[0]];
+}
 function Board({ dataObj, config, state, plots }) {
   const [isLoading, setLoading] = useState(true);
   const [moveData, setMoveData] = useState({}); //最新更新的时间
@@ -19,11 +22,13 @@ function Board({ dataObj, config, state, plots }) {
     function addData(data, dataArr) {
       //dataArr的数据结构为字典
       for (let [key, item] of Object.entries(dataArr)) {
-        data[key] = String(item[idx]);
+        data[key] = item[idx];
       }
     }
     addData(data, dataObj.sma);
     addData(data, dataObj.horse);
+    addData(data, dataObj.quant);
+    addData(data, dataObj.plan);
     return data;
   }
   function onmove(e) {
@@ -75,7 +80,7 @@ function Board({ dataObj, config, state, plots }) {
         {config.board.map((i) =>
           i.endsWith("_") ? (
             <div key={i}>
-              {i}: {updateData[i.slice(0, i.length - 1)]}
+              {i}: {String(updateData[i.slice(0, i.length - 1)])}
             </div>
           ) : undefined
         )}
@@ -83,11 +88,20 @@ function Board({ dataObj, config, state, plots }) {
       <br />
       <div id="moveBoard">
         {config.board.map((i) =>
-          i.endsWith("_") ? undefined : (
+          i.endsWith("_") || i.includes(".") ? undefined : (
             <div key={i}>
-              {i}: {moveData[i]}
+              {i}: {String(moveData[i])}
             </div>
           )
+        )}
+      </div>
+      <div id="quant" style={{ wordWrap: "break-word" }}>
+        {config.board.map((i) =>
+          i.includes(".") ? (
+            <div key={i}>
+              {i}: {String(split(moveData, i.split(".")))}
+            </div>
+          ) : undefined
         )}
       </div>
     </div>
