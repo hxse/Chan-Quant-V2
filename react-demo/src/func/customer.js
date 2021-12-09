@@ -77,6 +77,7 @@ export function* genQuant(dataObj, level, config) {
     dataObj = yield {
       idxFull,
       idx,
+      level,
       isLeftEqual,
       isDownEqual,
       startIdx,

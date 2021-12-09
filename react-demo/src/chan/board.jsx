@@ -29,6 +29,7 @@ function Board({ dataObj, config, state, plots }) {
     addData(data, dataObj.horse);
     addData(data, dataObj.quant);
     addData(data, dataObj.plan);
+    data = { ...data, store: dataObj.store[idx] };
     return data;
   }
   function onmove(e) {
@@ -80,7 +81,7 @@ function Board({ dataObj, config, state, plots }) {
         {config.board.map((i) =>
           i.endsWith("_") ? (
             <div key={i}>
-              {i}: {String(updateData[i.slice(0, i.length - 1)])}
+              {i}: {JSON.stringify(updateData[i.slice(0, i.length - 1)])}
             </div>
           ) : undefined
         )}
@@ -90,7 +91,7 @@ function Board({ dataObj, config, state, plots }) {
         {config.board.map((i) =>
           i.endsWith("_") || i.includes(".") ? undefined : (
             <div key={i}>
-              {i}: {String(moveData[i])}
+              {i}: {JSON.stringify(moveData[i])}
             </div>
           )
         )}
@@ -99,7 +100,7 @@ function Board({ dataObj, config, state, plots }) {
         {config.board.map((i) =>
           i.includes(".") ? (
             <div key={i}>
-              {i}: {String(split(moveData, i.split(".")))}
+              {i}: {JSON.stringify(split(moveData, i.split(".")))}
             </div>
           ) : undefined
         )}

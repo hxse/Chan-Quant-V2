@@ -1,5 +1,6 @@
 import { genQuant } from "./customer";
 import { genPlan } from "./plan";
+import { genStore } from "./store";
 
 function* genSmaData(closeArr, n, fractionDigits = 2) {
   const average = (arr) => arr.reduce((acc, val) => acc + val, 0) / arr.length;
@@ -67,6 +68,11 @@ function genCallback(dataObj, closeArr, genObj, config) {
     //合并策略值到dataObj
     dataObj["plan"][`plan${level}`] = [...dataObj["plan"][`plan${level}`], planRes.value];
   }
+  //不区分级别所以放for循环外面
+  //从生成器中获取策略store值
+  const storeRes = genObj["store"].next(dataObj);
+  //合并策略值到dataObj
+  dataObj["store"] = [...dataObj["store"], storeRes.value];
 }
 function initCallback(dataObj, closeArr, genObj, config) {
   //在opt对象中初始化定义生成器
@@ -80,10 +86,15 @@ function initCallback(dataObj, closeArr, genObj, config) {
     //初始化quant指标对象 in dataObj
     dataObj["quant"] = dataObj["quant"] || {};
     dataObj["quant"][`quant${level}`] = [];
-    //初始化strategy策略对象 in dataObj
+    //初始化plan策略对象 in dataObj
     dataObj["plan"] = dataObj["plan"] || {};
     dataObj["plan"][`plan${level}`] = [];
   }
+  //不区分级别所以放for循环外面
+  //初始化store策略对象 in dataObj
+  dataObj["store"] = dataObj["store"] || {};
+  dataObj["store"] = [];
+
   for (const [idx, level] of config.smaLevel.entries()) {
     //初始化sma指标生成器 in gen
     genObj["sma"] = genObj["sma"] || {};
@@ -101,6 +112,10 @@ function initCallback(dataObj, closeArr, genObj, config) {
     genObj["plan"] = genObj["plan"] || {};
     genObj["plan"][`plan${level}`] = genPlan(dataObj, level, config);
   }
+  //不区分级别所以放for循环外面
+  //初始化store指标生成器 in gen
+  genObj["store"] = genObj["store"] || {};
+  genObj["store"] = genStore(dataObj,  config);
 }
 export function* genDataObj(tohlcvData, config) {
   //添加新指标不要动这个主逻辑函数, 用上面两个回调函数来新增指标

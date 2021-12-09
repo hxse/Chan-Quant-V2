@@ -46,10 +46,11 @@ function ChanUplot() {
       (data) => {
         gdo = genDataObj(data, config);
         res = gdo.next(); //js生成器的第一次传参会被忽略掉,所以只拿结果不要传参
-        console.log("return0:", { ...res.value?.tohlcv });
-        console.log("return0:", { ...res.value?.sma });
-        console.log("return0:", { ...res.value?.horse });
-        console.log("return0:", { ...res.value?.quant });
+        console.log("return0:", res.value?.tohlcv);
+        console.log("return0:", res.value?.sma);
+        console.log("return0:", res.value?.horse);
+        console.log("return0:", res.value?.quant);
+        console.log("return0:", res.value?.store);
         if (res.value == undefined) {
           debugger;
         }
@@ -79,10 +80,11 @@ function ChanUplot() {
 
         if (cutData != undefined && cutData[0].length > 0) {
           res = gdo.next(cutData);
-          console.log("update0:", { ...res.value?.tohlcv });
-          console.log("update0:", { ...res.value?.sma });
-          console.log("update0:", { ...res.value?.horse });
-          console.log("update0:", { ...res.value?.quant });
+          console.log("update0:", res.value?.tohlcv);
+          console.log("update0:", res.value?.sma);
+          console.log("update0:", res.value?.horse);
+          console.log("update0:", res.value?.quant);
+          console.log("update0:", res.value?.store);
           updateAll("isInit", false);
           updateAll("isUpdate", true);
           updateAll("isWaiting", false);
