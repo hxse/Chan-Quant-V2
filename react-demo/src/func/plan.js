@@ -2,6 +2,14 @@ export function* genPlan(dataObj, level, config) {
   for (let idxFull = 0; true; idxFull++) {
     let idx = idxFull - config.smaExtra;
     let obj = { idx, idxFull };
+    function getIdxFull(x) {
+      //通过相对坐标x,get idxFull
+      return idxFull + x;
+    }
+    function getLevel(y) {
+      //通过相对坐标y,get level
+      return level / 2 ** -y;
+    }
     function getItem(name, x, y, mode) {
       //mode为true,输入idx不要带extra和level(2,4,16),为false,输入0,-1,-2,相对坐标
       //x是指定的idx不是idxFull,用0,-1,-2,从右往左数来表示,0表示当前x
@@ -63,20 +71,71 @@ export function* genPlan(dataObj, level, config) {
       const initClose = getItem("close", initIdx, undefined, true);
 
       //storeData是储存一下建仓时的仓位状态,currentData是当前状态
-      const currentData = { idx, idxFull, level, itemArr, conditionArr, close00 };
-      const storeData = { idx, idxFull, level, close00, initClose };
-
-      const enterPlan = (storeData, currentData) => {
-        //不建议对参数解包,因为storeData和currentData里面的key一模一样,解包了反而容易弄混
-        const plans = currentData.itemArr.map((i, idx) => currentData.conditionArr[idx](i));
-        return plans.every((i) => i === true); //返回bool值,表示当前策略的空开建议
+      const currentData = {
+        idx,
+        idxFull,
+        level,
+        itemArr,
+        conditionArr,
+        close00,
+        stopHorse: getItem("horse", 0, 1 - topY),
+        stopStartIdx: getItem("quant", 0, 1 - topY)?.startIdx,
       };
-      const leavePlan = (storeData, currentData) => {
+      const storeData = {
+        idx,
+        idxFull,
+        level,
+        close00,
+        initClose,
+        stopHorse: getItem("horse", 0, 0 - topY),
+        stopLevel: getLevel(1 - topY),
+        stopStartIdx: getItem("quant", 0, 1 - topY)?.startIdx,
+      };
+
+      const enterPlan = (currentData) => {
+        //不建议对参数解包,因为storeData和currentData里面的key一模一样,解包了反而容易弄混
+        const plans = []; //enter中必须全部条件符合才触发
+        plans.push(...currentData.itemArr.map((i, idx) => currentData.conditionArr[idx](i)));
+        return {
+          plans,
+          value: {
+            //暴露变量用来打印调试
+            currentData,
+          },
+        };
+      };
+      const leavePlan = (currentData, storeData) => {
         //决定何时平仓,storeData是建仓时的仓位状态
+        const plans = []; //leave中一个条件符合就触发
         const diffPriceStore = storeData.close00 - storeData.initClose;
         const diffPriceCurrent = currentData.close00 - storeData.close00;
         // return [diffPriceStore, diffPriceCurrent, Math.abs(diffPriceCurrent) >= Math.abs(diffPriceStore)];
-        return Math.abs(diffPriceCurrent) >= Math.abs(diffPriceStore);
+        //价格是否打到了开仓时末峰的1:1,超出则离场
+        plans.push(Math.abs(diffPriceCurrent) >= Math.abs(diffPriceStore));
+        //开仓时的主一horse是否和当前影一horse相同,不同则离场
+        // plans.push(
+        //   currentData.level == storeData.stopLevel &&
+        //     currentData.stopHorse != storeData.stopHorse &&
+        //     currentData.stopStartIdx != storeData.stopStartIdx
+        // );
+        return {
+          plans,
+          value: {
+            //暴露变量用来打印调试
+            storeData,
+            currentData,
+            diffPriceStore,
+            diffPriceCurrent,
+            // storeData.idx,
+            // currentData.stopStartIdx,
+            // storeData.stopStartIdx,
+            // currentData.level,
+            // storeData.stopLevel,
+            // storeData.stopHorse,
+            // currentData.stopHorse,
+          },
+        };
+        return plans;
       };
 
       obj = {

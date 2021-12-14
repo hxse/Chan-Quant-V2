@@ -2,14 +2,14 @@ const config = {
   plots: { candlePlot: true, horsePlot: true, rangePlot: true }, //true为启用,false为不启用,candlePlot和rangePlot不要设置false,可能引起某些功能不工作
   name: "SHFE.RB",
   frequency: "900s",
-  count: 300,
+  count: 600,
   refresh: false,
   updateCount: 3, //如果启用了fake模式,这个值被忽略,否则按这个值来更新
   updateRefresh: false,
   updateMode: "timeout", //更新模式
   lazyTime: 2000, //更新延时,
   smaLevel: [2, 4, 8, 16, 32, 64],
-  smaLevel: [2, 4, 8, 16],
+  // smaLevel: [2, 4, 8, 16],
   smaColor: [
     [255, 0, 0],
     [255, 255, 0],
@@ -57,7 +57,14 @@ config.board = [
   "plan16.initIdx",
   "store.idx",
   "store.idxFull",
-  "store.store.0.enter",
-  "store.store.0.leave",
+  "store.storeEnter",
+  "store.storeLeave",
+  "store.storeDeleteIdx",
+  "store.storeEnterPlans",
+  "store.storeLeavePlans",
+  "store.storeEnterValue",
+  "store.storeLeaveValue",
+  "store.storeIdxArrHistory",
+  "store.storeIdxArr",
 ]; //如果加了下划线,就代表是更新时的数据
 export default config;
