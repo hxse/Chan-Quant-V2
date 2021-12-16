@@ -12,26 +12,9 @@ let mode = "opt"; //data 或者是 opt 不同的写法
 //如果是data模式,就只需要在isUpdateCandle里写setData
 //data模式的好处是,不需要重构UplotReact组件,更新数据的时候只需要刷新图表就好了,不会触发onCreate和onDelete,但是不允许在更新数据的时候改变opt,只能在初始化时改变
 
-export default function usePlot({ mode, id, dataObj, config, getOpt, state, rangeState, plots }) {
-  console.log(`enter ${id}`);
-
-  const uplotData_cur = funcDataUplot(dataObj, config, "sma");
-  const [uplotData, setUplotData] = useState(uplotData_cur);
-  const [opt, setOpt] = useState();
-  const newOpt = getOpt({ dataObj, config, plots });
-
-  rangeState.dataCountCurrent = uplotData_cur[0].length;
-
-  useEffect(() => {
-    //组件渲染后执行
-    if (id == "rangePlot") {
-      //自动监听浏览器窗口缩放resize
-      plotAutoSize(plots);
-    }
-  }, []);
-
-  newOpt["scales"]["x"] = {
-    ...newOpt["scales"]["x"],
+function addScales(opt, { id, rangeState }) {
+  opt["scales"]["x"] = {
+    ...opt["scales"]["x"],
     range: (u, min, max) => {
       //为什么不要用setScale,而是用range: https://github.com/leeoniya/uPlot/issues/285
       console.log(id, "上一次重绘坐标 x", rangeState.minLast, rangeState.maxLast);
@@ -51,6 +34,26 @@ export default function usePlot({ mode, id, dataObj, config, getOpt, state, rang
       return uPlot.rangeNum(min, max, 0, true); //这个别用,会出bug,[min,max]就是最准的
     },
   };
+  return opt;
+}
+
+export default function usePlot({ mode, id, dataObj, config, getOpt, state, rangeState, plots }) {
+  console.log(`enter ${id}`);
+
+  const uplotData_cur = funcDataUplot(dataObj, config, "sma");
+  const [uplotData, setUplotData] = useState(uplotData_cur);
+  const newOpt = addScales(getOpt({ dataObj, config, plots, name: id }), { id, rangeState });
+  const [opt, setOpt] = useState(newOpt);
+
+  rangeState.dataCountCurrent = uplotData_cur[0].length;
+
+  useEffect(() => {
+    //组件渲染后执行
+    if (id == "rangePlot") {
+      //自动监听浏览器窗口缩放resize
+      plotAutoSize(plots);
+    }
+  }, []);
 
   if (state.isInit) {
     state.isInit = false;
@@ -59,8 +62,9 @@ export default function usePlot({ mode, id, dataObj, config, getOpt, state, rang
     console.log("init set newOpt");
     let title = "initing...";
     title = null;
-    newOpt["title"] = title;
-    setOpt(newOpt);
+    // newOpt["title"] = title;
+    // setOpt(newOpt);
+
     // setUplotData(uplotData_cur);
   }
   if (state.isUpdate) {
@@ -68,9 +72,9 @@ export default function usePlot({ mode, id, dataObj, config, getOpt, state, rang
     // debugger
     let title = "upDateing...";
     title = null;
-    newOpt["title"] = title;
+    // newOpt["title"] = title;
     if (mode == "opt") {
-      setOpt(newOpt);
+      // setOpt(newOpt);
       console.log("change Candle opt");
     } else {
       console.log("set data:", uplotData_cur[0].length);
@@ -82,11 +86,11 @@ export default function usePlot({ mode, id, dataObj, config, getOpt, state, rang
     let title = "waiting...";
     title = null;
     if (opt["title"] != title) {
-      newOpt["title"] = title;
+      // newOpt["title"] = title;
       // setOpt(newOpt);//不能用这个,因为会重新渲染性能浪费,而且会刷新range,直接用querySelector
       document.body.querySelector(`#${id} .u-title`).textContent = title;
     }
   }
   console.log(`end ${id}`, uplotData[0].length);
-  return [uplotData, uplotData_cur, opt];
+  return [uplotData, uplotData_cur, newOpt];
 }

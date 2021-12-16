@@ -7,6 +7,7 @@ const fmtUSD = (val, dec) => "$" + val.toFixed(dec).replace(/\d(?=(\d{3})+(?:\.|
 const fmtDate = uPlot.fmtDate("{YYYY}-{MM}-{DD}/ {HH} :{mm}");
 const tz = 1 == 1 ? "Asia/Shanghai" : "Etc/UTC";
 const tzDate = (ts) => uPlot.tzDate(new Date(ts * 1e3), tz);
+
 function split(obj, arr) {
   if (Object.keys(obj).length == 0) return undefined;
   return arr.length > 1 ? split(obj[arr[0]], arr.slice(1)) : obj[arr[0]];
@@ -72,6 +73,35 @@ function Board({ dataObj, config, state, plots }) {
     }
   });
 
+  function clickButton(e) {
+    const [start, end] = e.target.textContent.split(" ");
+    const range = 50;
+    for (const [name, plot] of Object.entries(plots)) {
+      // debugger
+      const min = parseInt(start) - range;
+      const max = end ? parseInt(end) + range : plot.data[0].length - 1; //一定要注意减1,否则引起精度bug
+      if (name != "rangePlot") {
+        plot.setScale("x", {
+          min,
+          max,
+        });
+      } else {
+        let left = Math.round(plot.valToPos(min, "x"));
+        let width = Math.round(plot.valToPos(max, "x")) - left;
+        let height = plot.bbox.height / devicePixelRatio;
+        // debugger;
+        plot.setSelect(
+          {
+            left,
+            width,
+            height,
+          },
+          false
+        );
+      }
+    }
+  }
+
   if (isLoading) {
     return <div>board loading...</div>;
   }
@@ -104,6 +134,23 @@ function Board({ dataObj, config, state, plots }) {
             </div>
           ) : undefined
         )}
+      </div>
+      <div id="store" style={{ wordWrap: "break-word" }}>
+        "storeArr_":
+        <br />
+        {updateData["store"]["storeArr"].map((store, idx) => (
+          <button onClick={clickButton} key={"storeArr" + idx}>
+            {store.storeData.idx} {store.deleteIdx}
+          </button>
+        ))}
+        <br />
+        "storeArrHistory_":
+        <br />
+        {updateData["store"]["storeArrHistory"].map((store, idx) => (
+          <button onClick={clickButton} key={"storeArrHistory" + idx}>
+            {store.storeData.idx} {store.deleteIdx}
+          </button>
+        ))}
       </div>
     </div>
   );

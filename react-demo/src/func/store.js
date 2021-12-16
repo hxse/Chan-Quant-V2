@@ -35,6 +35,7 @@ export function* genStore(dataObj, config) {
       //删除被标记delete的仓位,filter放map前面可以忽略当前的标记
       storeArr = storeArrHistory.filter((store) => store.deleteIdx === undefined);
       //给第一次leave为true的,标记deleteIdx
+      //todo 再优化,可以考虑做个leaveObj,清仓时状态保留
       storeArrHistory.map(
         (store) => (store.deleteIdx = store.leave && store.deleteIdx === undefined ? idx : store.deleteIdx)
       );
@@ -42,6 +43,8 @@ export function* genStore(dataObj, config) {
       obj = {
         idx,
         idxFull,
+        storeArr,
+        storeArrHistory,
         store: [...storeArr],
         storeDeleteIdx: [...storeArr].map((i) => i.deleteIdx)[0],
         storeEnter: [...storeArr].map((i) => i.enter)[0],

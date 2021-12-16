@@ -5,11 +5,12 @@ import { unstable_batchedUpdates } from "react-dom";
 import uPlot from "uplot";
 import UplotReact from "uplot-react";
 import "uplot/dist/uPlot.min.css";
-//引用图表
+//引用jsx组件
 import CandlePlot from "./candlePlot";
 import HorsePlot from "./horsePlot";
 import RangePlot from "./rangePlot";
 import Board from "./board";
+import Screenshot from "./screenshot";
 //引用配置文件
 import config from "./config";
 import candleOpt from "./candleOpt";
@@ -127,6 +128,14 @@ function ChanUplot() {
       </div>
       <div id="board">
         <Board dataObj={dataObj} config={config} state={boardState} plots={plots}></Board>
+      </div>
+      <div id="screenshot" style={{ display: "none_", weight: 2000, height: 1000 }}>
+        <Screenshot
+          dataObj={dataObj}
+          config={config}
+          states={{ candleState, horseState, rangeState }}
+          plots={plots}
+        ></Screenshot>
       </div>
     </div>
   );

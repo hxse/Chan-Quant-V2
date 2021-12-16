@@ -1,4 +1,5 @@
 import wheelZoomPlugin from "../plugin/wheelZoomPlugin";
+import framePlugin from "../plugin/framePlugin";
 import uPlot from "uplot";
 const fmtUSD = (val, dec) => "$" + val.toFixed(dec).replace(/\d(?=(\d{3})+(?:\.|$))/g, "$&,");
 const fmtDate = uPlot.fmtDate("{YYYY}-{MM}-{DD}-{HH}-{mm}");
@@ -10,9 +11,9 @@ import { getSize } from "./sizeEvent";
 const cursorOpts = {
   y: true,
   lock: false, //这个用了会出bug,反正也没用,建议别用
-  focus: {
-    prox: 16,
-  },
+  // focus: {//这个是
+  //   prox: 16,
+  // },
   sync: {
     key: "moo",
     setSeries: true,
@@ -80,13 +81,13 @@ const xFormat = () => {
     ],
   };
 };
-const options = ({ dataObj, config }) => {
+const options = ({ dataObj, config, name, uncursor }) => {
   const { plotWidth, plotHeight, rangeHeight, parentHeight } = getSize();
   return {
-    title: "Chart",
+    // title: "Chart",
     width: plotWidth,
     height: plotHeight,
-    cursor: cursorOpts,
+    cursor: uncursor ? undefined : cursorOpts,
     series: [
       {
         label: "Date",
@@ -104,7 +105,7 @@ const options = ({ dataObj, config }) => {
     legend: {
       show: false,
     },
-    // plugins: [wheelZoomPlugin({ factor: 0.75 })],
+    plugins: [framePlugin({ dataObj, config, name })],
   };
 };
 

@@ -7,7 +7,9 @@ export function getSize() {
   const bodyHeight = window.innerHeight;
   const boardWidth = bodyWidth / 5;
   const plotWidth = bodyWidth - boardWidth;
-  const filterPlot = Object.entries(plots).filter(([key, item]) => (item && key != "rangePlot" ? true : false));
+  const filterPlot = Object.entries(plots).filter(([key, item]) =>
+    item && key != "rangePlot" && !key.endsWith("_") ? true : false
+  );
   const rangeHeight = 130;
   const plotHeight = (bodyHeight - rangeHeight - 1) / filterPlot.length;
   const parentHeight = plotHeight - 50 + 17 - 2; //50和17是默认常量,2是容错

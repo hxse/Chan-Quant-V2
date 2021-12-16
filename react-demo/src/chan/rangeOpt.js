@@ -40,7 +40,7 @@ function createSeriesOpt(config) {
 const options = ({ dataObj, config, plots }) => {
   const { plotWidth, plotHeight, rangeHeight, parentHeight } = getSize();
   return {
-    title: "Chart",
+    // title: "Chart",
     width: plotWidth,
     height: rangeHeight,
     cursor: cursorOpts,

@@ -90,6 +90,7 @@ export function* genPlan(dataObj, level, config) {
         stopHorse: getItem("horse", 0, 0 - topY),
         stopLevel: getLevel(1 - topY),
         stopStartIdx: getItem("quant", 0, 1 - topY)?.startIdx,
+        way: getItem("horse", 0, 0 - topY),
       };
 
       const enterPlan = (currentData) => {
