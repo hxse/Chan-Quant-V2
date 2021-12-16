@@ -47,6 +47,9 @@ function framePlugin({ dataObj, config, name }) {
         if (!u.root.parentElement) debugger;
         const id = u.root.parentElement.parentElement.id;
         dataObj;
+        if (dataObj.store.length != config.smaExtra + u.data[0].length) {
+          return;
+        }
         console.assert(dataObj.store.length == config.smaExtra + u.data[0].length, "图表中的数据不同步哦");
         const { ctx, data } = u;
         const storeArrHistory = dataObj.store.at(-1).storeArrHistory;

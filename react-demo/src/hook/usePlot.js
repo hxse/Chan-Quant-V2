@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { funcDataUplot } from "../func/funcIndicator";
 import uPlot from "uplot";
 import { plotAutoSize } from "../chan/sizeEvent";
@@ -44,6 +44,7 @@ export default function usePlot({ mode, id, dataObj, config, getOpt, state, rang
   const [uplotData, setUplotData] = useState(uplotData_cur);
   const newOpt = addScales(getOpt({ dataObj, config, plots, name: id }), { id, rangeState });
   const [opt, setOpt] = useState(newOpt);
+  // const opt = useMemo(() => newOpt);
 
   rangeState.dataCountCurrent = uplotData_cur[0].length;
 
@@ -57,40 +58,18 @@ export default function usePlot({ mode, id, dataObj, config, getOpt, state, rang
 
   if (state.isInit) {
     state.isInit = false;
+    //这个是确定Scale初始范围
     rangeState.minLast = 0;
     rangeState.maxLast = uplotData_cur[0].length - 1;
-    console.log("init set newOpt");
-    let title = "initing...";
-    title = null;
-    // newOpt["title"] = title;
-    // setOpt(newOpt);
-
-    // setUplotData(uplotData_cur);
   }
   if (state.isUpdate) {
     state.isUpdate = false;
-    // debugger
-    let title = "upDateing...";
-    title = null;
-    // newOpt["title"] = title;
-    if (mode == "opt") {
-      // setOpt(newOpt);
-      console.log("change Candle opt");
-    } else {
-      console.log("set data:", uplotData_cur[0].length);
-      setUplotData(uplotData_cur);
-    }
+    setOpt(newOpt);
   }
   if (state.isWaiting) {
     state.isWaiting = false;
-    let title = "waiting...";
-    title = null;
-    if (opt["title"] != title) {
-      // newOpt["title"] = title;
-      // setOpt(newOpt);//不能用这个,因为会重新渲染性能浪费,而且会刷新range,直接用querySelector
-      document.body.querySelector(`#${id} .u-title`).textContent = title;
-    }
+    // document.body.querySelector(`#${id} .u-title`).textContent = title;
   }
   console.log(`end ${id}`, uplotData[0].length);
-  return [uplotData, uplotData_cur, newOpt];
+  return [uplotData, uplotData_cur, opt];
 }

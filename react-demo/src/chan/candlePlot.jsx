@@ -22,6 +22,7 @@ function CandlePlot({ dataObj, config, state, plots, scale }) {
     rangeState,
     plots,
   });
+
   return (
     <UplotReact
       key="hooks-key"
