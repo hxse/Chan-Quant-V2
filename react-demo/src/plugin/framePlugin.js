@@ -43,7 +43,8 @@ function framePlugin({ dataObj, config, name }) {
         const id = u.root.parentElement.parentElement.id;
       },
       draw: (u) => {
-        //绘制完所有内容后触发
+        //绘制完主图内容后触发
+        // debugger;
         if (!u.root.parentElement) debugger;
         const id = u.root.parentElement.parentElement.id;
         dataObj;
@@ -95,6 +96,11 @@ function framePlugin({ dataObj, config, name }) {
           // debugger;
           // break;
         }
+      },
+      ready: (u) => {
+        //绘制完插件内容触发
+        // debugger;
+        if (!u.root.parentElement) debugger;
       },
     },
   };

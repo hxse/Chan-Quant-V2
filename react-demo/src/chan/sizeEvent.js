@@ -41,9 +41,10 @@ export function plotAutoSize(plots) {
       }
 
       //隐藏x轴
-      if (key != "candlePlot" && key != "rangePlot") {
-        item.root.parentElement.style.height = parentHeight;
-        item.root.parentElement.style.overflow = "hidden";
+      if (key != "horsePlot" && key != "rangePlot") {
+        item.root.parentElement.parentElement.style.height = parentHeight+"px"
+        item.root.parentElement.parentElement.style.overflow = "hidden";
+        // debugger;
       }
     }
   });

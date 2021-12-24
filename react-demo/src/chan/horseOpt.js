@@ -23,14 +23,14 @@ const cursorOpts = {
   },
 };
 
-const options = ({ dataObj, config }) => {
+const options = ({ dataObj, config, name, uncursor }) => {
   const { plotWidth, plotHeight, rangeHeight, parentHeight } = getSize();
   const horseData = funcDataUplot(dataObj, config, "horse");
   return {
     // title: "Chart",
     width: plotWidth,
     height: plotHeight,
-    cursor: cursorOpts,
+    cursor: uncursor ? undefined : cursorOpts,
     series: [
       {
         label: "Date",

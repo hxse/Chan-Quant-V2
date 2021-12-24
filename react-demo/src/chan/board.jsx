@@ -1,6 +1,7 @@
 import UplotReact from "uplot-react";
 import React, { useState, useEffect } from "react";
 import { unstable_batchedUpdates } from "react-dom";
+import { setScale } from "./screenshot";
 
 import uPlot from "uplot";
 const fmtUSD = (val, dec) => "$" + val.toFixed(dec).replace(/\d(?=(\d{3})+(?:\.|$))/g, "$&,");
@@ -75,11 +76,10 @@ function Board({ dataObj, config, state, plots }) {
 
   function clickButton(e) {
     const [start, end] = e.target.textContent.split(" ");
-    const range = 50;
     for (const [name, plot] of Object.entries(plots)) {
       // debugger
-      const min = parseInt(start) - range;
-      const max = end ? parseInt(end) + range : plot.data[0].length - 1; //一定要注意减1,否则引起精度bug
+      const range = 50;
+      const [min, max] = setScale(start, end, range, dataObj.tohlcv[0].length);
       if (name != "rangePlot") {
         plot.setScale("x", {
           min,

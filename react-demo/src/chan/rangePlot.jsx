@@ -37,8 +37,6 @@ function RangePlot({ dataObj, config, state, plots }) {
       //   target={root}
       onDelete={(u) => {
         console.log("Deleted from hooks rangeUplot");
-        let plot = u.root.querySelector(".u-over");
-        plot.removeEventListener("wheel", () => {});
       }}
       onCreate={(u) => {
         console.log("Created from hooks rangeUplot");

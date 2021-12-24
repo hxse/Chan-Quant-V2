@@ -106,6 +106,22 @@ const options = ({ dataObj, config, name, uncursor }) => {
       show: false,
     },
     plugins: [framePlugin({ dataObj, config, name })],
+    hooks: {
+      //option里面的hooks优先级比插件里面高
+      draw: [
+        (u) => {
+          // debugger;
+        },
+        (u) => {
+          // debugger;
+        },
+      ],
+      ready: [
+        (u) => {
+          // debugger;
+        },
+      ],
+    },
   };
 };
 
