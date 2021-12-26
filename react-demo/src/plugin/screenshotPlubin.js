@@ -65,8 +65,14 @@ function screenshotPlugin({ dataObj, config, name }) {
         const dataUrl = u.ctx.canvas.toDataURL("image/png");
         console.timeEnd("canvas.toDataURL time");
         if (!id) debugger;
-        postData({ id, dataUrl });
+
+        postData({
+          id,
+          dataUrl,
+          config: Object.fromEntries(Object.entries(config).filter(([k, v]) => k != "plots")),
+        });
         // postData({ hello: "world" });
+        // debugger
       },
     },
   };

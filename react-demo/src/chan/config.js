@@ -23,6 +23,7 @@ const config = {
   fakeStep: 5,
   rangeFactor: 0.7, //rangePlot移动当前窗口的百分比
   rangerMinimumSpacing: 10, //rangePlot的最小缩放间隔
+  screenNum: 3, //发送plot类型的数量,3个一般是candlePlot+horsePlot+rangePlot,后端程序等到接受到3个时才启动合并图片
 };
 config.smaExtra = config.smaLevel[config.smaLevel.length - 1] - 1;
 if (config.count <= config.fakeNum) {
