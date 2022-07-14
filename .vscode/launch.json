@@ -7,8 +7,15 @@
         {
             "type": "pwa-chrome",
             "request": "launch",
-            "name": "dev Launch Chrome against localhost",
-            "url": "http://localhost:5000",
+            "name": "SHFERB_900s dev Launch Chrome against localhost",
+            "url": "http://localhost:5000?config=SHFERB_900s",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "SHFERB_3600s dev Launch Chrome against localhost",
+            "url": "http://localhost:5000?config=SHFERB_3600s",
             "webRoot": "${workspaceFolder}"
         }
     ]

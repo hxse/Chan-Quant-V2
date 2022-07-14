@@ -55,8 +55,8 @@ function Screenshot({ dataObj, config, states, plots }) {
     store.send = true;
 
     const scale = true;
-    const range = 50;
-    const [min, max] = setScale(store.storeData.idx, store.deleteIdx, range, dataObj.tohlcv[0].length);
+    const range = config.sendRange;
+    let [min, max] = setScale(store.storeData.idx, store.deleteIdx, range, dataObj.tohlcv[0].length);
     rangeOpt.hooks = {
       draw: [
         (u) => {

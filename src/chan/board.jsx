@@ -78,7 +78,7 @@ function Board({ dataObj, config, state, plots }) {
     const [start, end] = e.target.textContent.split(" ");
     for (const [name, plot] of Object.entries(plots)) {
       // debugger
-      const range = 50;
+      const range = config.sendRange;
       const [min, max] = setScale(start, end, range, dataObj.tohlcv[0].length);
       if (name != "rangePlot") {
         plot.setScale("x", {
