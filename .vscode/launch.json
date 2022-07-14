@@ -8,14 +8,14 @@
             "type": "pwa-chrome",
             "request": "launch",
             "name": "SHFERB_900s dev Launch Chrome against localhost",
-            "url": "http://localhost:5000?config=SHFERB_900s",
+            "url": "http://localhost:5000?name=SHFE.RB&frequency=900s",
             "webRoot": "${workspaceFolder}"
         },
         {
             "type": "pwa-chrome",
             "request": "launch",
             "name": "SHFERB_3600s dev Launch Chrome against localhost",
-            "url": "http://localhost:5000?config=SHFERB_3600s",
+            "url": "http://localhost:5000?name=SHFE.RB&frequency=3600s",
             "webRoot": "${workspaceFolder}"
         }
     ]
