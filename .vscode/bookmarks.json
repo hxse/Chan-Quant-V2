@@ -1,0 +1,24 @@
+{
+	"files": [
+		{
+			"path": "demo/src/App.jsx",
+			"bookmarks": [
+				{
+					"line": 5,
+					"column": 16,
+					"label": ""
+				}
+			]
+		},
+		{
+			"path": "react-demo/src/func/genIndicator.js",
+			"bookmarks": [
+				{
+					"line": 63,
+					"column": 0,
+					"label": ""
+				}
+			]
+		}
+	]
+}

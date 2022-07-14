@@ -61,6 +61,7 @@ function screenshotPlugin({ dataObj, config, name }) {
           debugger;
         }
         const storeArrHistory = dataObj.store.at(-1).storeArrHistory;
+
         console.time("canvas.toDataURL time");
         const dataUrl = u.ctx.canvas.toDataURL("image/png");
         console.timeEnd("canvas.toDataURL time");

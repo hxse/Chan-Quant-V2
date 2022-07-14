@@ -42,7 +42,7 @@ export function plotAutoSize(plots) {
 
       //隐藏x轴
       if (key != "horsePlot" && key != "rangePlot") {
-        item.root.parentElement.parentElement.style.height = parentHeight+"px"
+        item.root.parentElement.parentElement.style.height = parentHeight + "px";
         item.root.parentElement.parentElement.style.overflow = "hidden";
         // debugger;
       }

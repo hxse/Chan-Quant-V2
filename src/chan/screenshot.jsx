@@ -45,7 +45,7 @@ function Screenshot({ dataObj, config, states, plots }) {
     debugger;
   }
 
-  const lastNum = 3;
+  const lastNum = config.lastPostNum;
 
   const storeArrHistory = dataObj.store.at(config.smaExtra).storeArrHistory;
   const dom = [];
