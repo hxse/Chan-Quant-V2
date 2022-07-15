@@ -5,9 +5,9 @@ import { setScale } from "./screenshot";
 
 import uPlot from "uplot";
 const fmtUSD = (val, dec) => "$" + val.toFixed(dec).replace(/\d(?=(\d{3})+(?:\.|$))/g, "$&,");
-const fmtDate = uPlot.fmtDate("{YYYY}-{MM}-{DD}/ {HH} :{mm}");
+export const fmtDate = uPlot.fmtDate("{YYYY}-{MM}-{DD} {HH} :{mm}");
 const tz = 1 == 1 ? "Asia/Shanghai" : "Etc/UTC";
-const tzDate = (ts) => uPlot.tzDate(new Date(ts * 1e3), tz);
+export const tzDate = (ts) => uPlot.tzDate(new Date(ts * 1e3), "Asia/Shanghai");
 
 function split(obj, arr) {
   if (Object.keys(obj).length == 0) return undefined;

@@ -7,15 +7,43 @@
         {
             "type": "pwa-chrome",
             "request": "launch",
-            "name": "SHFERB_900s dev Launch Chrome against localhost",
-            "url": "http://localhost:5000?name=SHFE.RB&frequency=900s",
+            "name": "SHFE.rb2210_180s dev Launch Chrome against localhost",
+            "url": "http://localhost:5000?name=SHFE.rb2210&frequency=180s",
             "webRoot": "${workspaceFolder}"
         },
         {
             "type": "pwa-chrome",
             "request": "launch",
-            "name": "SHFERB_3600s dev Launch Chrome against localhost",
-            "url": "http://localhost:5000?name=SHFE.RB&frequency=3600s",
+            "name": "SHFE.rb2210_900s dev Launch Chrome against localhost",
+            "url": "http://localhost:5000?name=SHFE.rb2210&frequency=900s",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "SHFE.rb2210_3600s dev Launch Chrome against localhost",
+            "url": "http://localhost:5000?name=SHFE.rb2210&frequency=3600s",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "CZCE.ma2209_180s dev Launch Chrome against localhost",
+            "url": "http://localhost:5000?name=CZCE.ma2209&frequency=180s",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "CZCE.ma2209_900s dev Launch Chrome against localhost",
+            "url": "http://localhost:5000?name=CZCE.ma2209&frequency=900s",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "CZCE.ma2209_3600s dev Launch Chrome against localhost",
+            "url": "http://localhost:5000?name=CZCE.ma2209&frequency=3600s",
             "webRoot": "${workspaceFolder}"
         }
     ]

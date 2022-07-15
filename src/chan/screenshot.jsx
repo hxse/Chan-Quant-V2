@@ -33,13 +33,14 @@ function Screenshot({ dataObj, config, states, plots }) {
   const [weight, height] = [800, 500];
   // opt.weight = weight;
   // opt.height = height;
-  opt.plugins = [...opt.plugins, screenshotPlugin({ dataObj, config, name: "copyCandle" })];
   // horseOpt.weight = weight;
   // horseOpt.height = height;
-  horseOpt.plugins = [...horseOpt.plugins, screenshotPlugin({ dataObj, config, name: "copyHorse" })];
   // rangeOpt.weight = weight;
   // rangeOpt.height = height;
-  rangeOpt.plugins = [screenshotPlugin({ dataObj, config, name: "copyRange" })];
+
+  // opt.plugins = [...opt.plugins, screenshotPlugin({ dataObj, config, name: "copyCandle" })];
+  // horseOpt.plugins = [...horseOpt.plugins, screenshotPlugin({ dataObj, config, name: "copyHorse" })];
+  // rangeOpt.plugins = [screenshotPlugin({ dataObj, config, name: "copyRange" })];
 
   if (dataObj.store.at(config.smaExtra).storeArrHistory == undefined) {
     debugger;
@@ -74,6 +75,43 @@ function Screenshot({ dataObj, config, states, plots }) {
         },
       ],
     };
+
+    opt.plugins = [
+      ...opt.plugins,
+      screenshotPlugin({
+        dataObj,
+        config,
+        name: "copyCandle",
+        postArgs: {
+          time: store?.enterObj?.value?.currentData.time,
+          timeStr: store?.enterObj?.value?.currentData.timeStr,
+          close: store?.enterObj?.value?.currentData.close,
+        },
+      }),
+    ];
+    horseOpt.plugins = [
+      ...horseOpt.plugins,
+      screenshotPlugin({
+        dataObj,
+        config,
+        name: "copyHorse",
+        postArgs: {
+          time: store?.enterObj?.value?.currentData.time,
+          timeStr: store?.enterObj?.value?.currentData.timeStr,
+          close: store?.enterObj?.value?.currentData.close,
+        },
+      }),
+    ];
+    rangeOpt.plugins = [
+      screenshotPlugin({
+        dataObj,
+        config,
+        name: "copyRange",
+
+        enterObj: store?.enterObj?.value?.currentData,
+        leaveObj: store?.leaveObj?.value?.currentData,
+      }),
+    ];
 
     dom.push(
       <div key={`screen_${index}`} id={`screen${index}`}>

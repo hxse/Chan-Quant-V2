@@ -13,7 +13,7 @@ async function postData(data) {
   //   console.log(content);
 }
 
-function screenshotPlugin({ dataObj, config, name }) {
+function screenshotPlugin({ dataObj, config, name, postArgs }) {
   name;
   //   debugger;
   return {
@@ -71,6 +71,7 @@ function screenshotPlugin({ dataObj, config, name }) {
           id,
           dataUrl,
           config: Object.fromEntries(Object.entries(config).filter(([k, v]) => k != "plots")),
+          postArgs: postArgs,
         });
         // postData({ hello: "world" });
         // debugger

@@ -1,3 +1,5 @@
+import { fmtDate, tzDate } from "/src/chan/board";
+
 export function* genPlan(dataObj, level, config) {
   for (let idxFull = 0; true; idxFull++) {
     let idx = idxFull - config.smaExtra;
@@ -72,6 +74,9 @@ export function* genPlan(dataObj, level, config) {
 
       //storeData是储存一下建仓时的仓位状态,currentData是当前状态
       const currentData = {
+        time: time00,
+        timeStr: fmtDate(tzDate(parseInt(time00))),
+        close: close00,
         idx,
         idxFull,
         level,
@@ -82,6 +87,9 @@ export function* genPlan(dataObj, level, config) {
         stopStartIdx: getItem("quant", 0, 1 - topY)?.startIdx,
       };
       const storeData = {
+        time: time00,
+        timeStr: fmtDate(tzDate(parseInt(time00))),
+        close: close00,
         idx,
         idxFull,
         level,
