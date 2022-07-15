@@ -3,7 +3,7 @@ const config = {
   name: "SHFE.RB",
   frequency: "900s",
   count: 300,
-  refresh: false,
+  refresh: true,
   updateCount: 3, //如果启用了fake模式,这个值被忽略,否则按这个值来更新
   updateRefresh: true,
   updateMode: "timeout", //更新模式

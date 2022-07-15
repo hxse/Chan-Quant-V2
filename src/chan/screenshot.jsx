@@ -76,17 +76,19 @@ function Screenshot({ dataObj, config, states, plots }) {
       ],
     };
 
+    const postArgs = {
+      time: store?.enterObj?.value?.currentData.time,
+      timeStr: store?.enterObj?.value?.currentData.timeStr,
+      close: store?.enterObj?.value?.currentData.close,
+    };
+
     opt.plugins = [
       ...opt.plugins,
       screenshotPlugin({
         dataObj,
         config,
         name: "copyCandle",
-        postArgs: {
-          time: store?.enterObj?.value?.currentData.time,
-          timeStr: store?.enterObj?.value?.currentData.timeStr,
-          close: store?.enterObj?.value?.currentData.close,
-        },
+        postArgs,
       }),
     ];
     horseOpt.plugins = [
@@ -95,11 +97,7 @@ function Screenshot({ dataObj, config, states, plots }) {
         dataObj,
         config,
         name: "copyHorse",
-        postArgs: {
-          time: store?.enterObj?.value?.currentData.time,
-          timeStr: store?.enterObj?.value?.currentData.timeStr,
-          close: store?.enterObj?.value?.currentData.close,
-        },
+        postArgs,
       }),
     ];
     rangeOpt.plugins = [
@@ -107,9 +105,7 @@ function Screenshot({ dataObj, config, states, plots }) {
         dataObj,
         config,
         name: "copyRange",
-
-        enterObj: store?.enterObj?.value?.currentData,
-        leaveObj: store?.leaveObj?.value?.currentData,
+        postArgs,
       }),
     ];
 
